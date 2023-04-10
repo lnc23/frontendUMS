@@ -30,7 +30,14 @@ const Home = () => {
         >
           Create Master Barang
         </Button>
-        <Button bg={"blueGray.400"} borderRadius={5} fontWeight={"semibold"}>
+        <Button
+          onPress={() => {
+            navigation.push("Penjualan");
+          }}
+          bg={"blueGray.400"}
+          borderRadius={5}
+          fontWeight={"semibold"}
+        >
           Create Penjualan
         </Button>
       </VStack>

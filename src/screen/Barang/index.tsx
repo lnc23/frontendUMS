@@ -456,7 +456,7 @@ const Barang = () => {
             </VStack>
           </Box>
         )}
-        keyExtractor={(item: any) => item.id_Barang}
+        keyExtractor={(item: any) => item.kode}
       />
     </Container>
   );

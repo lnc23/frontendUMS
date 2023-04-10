@@ -18,34 +18,35 @@ import axios from "axios";
 //@ts-ignore
 import { API_URL } from "@env";
 
-const Pelanggan = () => {
+const Barang = () => {
   const [loading, setLoading] = React.useState(false);
   const [modalDelete, setModalDelete] = React.useState(false);
   const [ID, setID] = React.useState<{
-    id_pelanggan: number;
+    kode: number;
     nama: string;
-    domisili: string;
-    jenis_kelamin: string;
+    kategori: string;
+    harga: number;
   }>();
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [dataPelanggan, setDataPelanggan] = React.useState();
-  const [namaPelanggan, setNamaPelanggan] = React.useState("");
-  const [Domisili, setDomisili] = React.useState("");
-  const [jenisKelamin, setJenisKelamin] = React.useState("");
+  const [dataBarang, setDataBarang] = React.useState();
+  const [namaBarang, setNamaBarang] = React.useState("");
+  const [Kategori, setKategori] = React.useState("");
+  const [Harga, setHarga] = React.useState("");
   const toast = useToast();
   const Gender = ["Laki-laki", "Perempuan"];
-  const [editNamaPelanggan, setEditNamaPelanggan] = React.useState("");
-  const [editDomisili, setEditDomisili] = React.useState("");
-  const [editJenisKelamin, setEditJenisKelamin] = React.useState("");
+  const [editnamaBarang, setEditNamaBarang] = React.useState("");
+  const [editKategori, setEditKategori] = React.useState("");
+  const [editHarga, setEditHarga] = React.useState("");
 
-  const handleCreatePelanggan = () => {
+  const handleCreateBarang = () => {
     setLoading(true);
     const obj = {
-      nama: namaPelanggan,
-      domisili: Domisili,
-      jenis_kelamin: jenisKelamin,
+      nama: namaBarang,
+      kategori: Kategori,
+      harga: Number(Harga),
     };
-    if (!jenisKelamin || !namaPelanggan || !Domisili) {
+    console.log(obj);
+    if (!Harga || !namaBarang || !Kategori) {
       toast.show({
         render: () => {
           return (
@@ -58,12 +59,12 @@ const Pelanggan = () => {
       setLoading(false);
     } else {
       axios
-        .post(`${API_URL}/api/pelanggan`, obj)
+        .post(`${API_URL}/api/barang`, obj)
         .then(function (response) {
           const fetchData = axios
-            .get(`${API_URL}/api/pelanggan`)
+            .get(`${API_URL}/api/barang`)
             .then(function (response) {
-              setDataPelanggan(response.data.data);
+              setDataBarang(response.data);
             })
             .catch(function (e) {
               console.log(e);
@@ -73,7 +74,7 @@ const Pelanggan = () => {
             render: () => {
               return (
                 <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
-                  <Text color={"white"}>Data Pelanggan Berhasil Dicreate</Text>
+                  <Text color={"white"}>Data Barang Berhasil Dicreate</Text>
                 </Box>
               );
             },
@@ -95,14 +96,14 @@ const Pelanggan = () => {
     }
   };
 
-  const handleEditPelanggan = (id: any) => {
+  const handleEditBarang = (id: any) => {
     setLoading(true);
     const obj = {
-      nama: editNamaPelanggan,
-      domisili: editDomisili,
-      jenis_kelamin: editJenisKelamin,
+      nama: editnamaBarang,
+      kategori: editKategori,
+      harga: Number(editHarga),
     };
-    if (!editJenisKelamin || !editNamaPelanggan || !editDomisili) {
+    if (!editHarga || !editnamaBarang || !editKategori) {
       toast.show({
         render: () => {
           return (
@@ -115,12 +116,12 @@ const Pelanggan = () => {
       setLoading(false);
     } else {
       axios
-        .put(`${API_URL}/api/pelanggan?id_pelanggan=${id}`, obj)
+        .put(`${API_URL}/api/barang?kode=${id}`, obj)
         .then(function (response) {
           const fetchData = axios
-            .get(`${API_URL}/api/pelanggan`)
+            .get(`${API_URL}/api/barang`)
             .then(function (response) {
-              setDataPelanggan(response.data.data);
+              setDataBarang(response.data);
             })
             .catch(function (e) {
               console.log(e);
@@ -130,7 +131,7 @@ const Pelanggan = () => {
             render: () => {
               return (
                 <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
-                  <Text color={"white"}>Data Pelanggan Berhasil Diedit</Text>
+                  <Text color={"white"}>Data Barang Berhasil Diedit</Text>
                 </Box>
               );
             },
@@ -154,15 +155,15 @@ const Pelanggan = () => {
     }
   };
 
-  const handleDeletePelanggan = (id: any) => {
+  const handleDeleteBarang = (id: any) => {
     setLoading(true);
     axios
-      .delete(`${API_URL}/api/pelanggan?id_pelanggan=${id}`)
+      .delete(`${API_URL}/api/barang?kode=${id}`)
       .then(function (response) {
         const fetchData = axios
-          .get(`${API_URL}/api/pelanggan`)
+          .get(`${API_URL}/api/barang`)
           .then(function (response) {
-            setDataPelanggan(response.data.data);
+            setDataBarang(response.data);
           })
           .catch(function (e) {
             console.log(e);
@@ -172,7 +173,7 @@ const Pelanggan = () => {
           render: () => {
             return (
               <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
-                <Text color={"white"}>Data Berhasil Didelete</Text>
+                <Text color={"white"}>Barang Berhasil Didelete</Text>
               </Box>
             );
           },
@@ -187,7 +188,7 @@ const Pelanggan = () => {
             return (
               <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
                 <Text color={"white"}>
-                  Data gagal didelete karena memiliki no nota
+                  Barang gagal didelete karena sudah terdaftar no nota
                 </Text>
               </Box>
             );
@@ -199,9 +200,9 @@ const Pelanggan = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/pelanggan`)
+      .get(`${API_URL}/api/barang`)
       .then(function (response) {
-        setDataPelanggan(response.data.data);
+        setDataBarang(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -243,45 +244,37 @@ const Pelanggan = () => {
             shadow={"5"}
           >
             <VStack space={5} alignItems={"center"}>
-              <Text>Edit Data Pelanggan</Text>
-              <Stack space={4} w="100%">
+              <Text>Edit Data Barang</Text>
+              <Stack space={4} width="100%">
                 <Input
+                  width={"100%"}
                   borderColor={"#b0b1b2"}
                   size="md"
-                  placeholder="Nama Pelanggan"
-                  value={editNamaPelanggan}
+                  placeholder="Nama Barang"
+                  value={editnamaBarang}
                   onChangeText={(e) => {
-                    setEditNamaPelanggan(e);
+                    setEditNamaBarang(e);
+                  }}
+                />
+                <Input
+                  width={"100%"}
+                  borderColor={"#b0b1b2"}
+                  size="md"
+                  placeholder="Kategori"
+                  value={editKategori}
+                  onChangeText={(e) => {
+                    setEditKategori(e);
                   }}
                 />
                 <Input
                   borderColor={"#b0b1b2"}
                   size="md"
-                  placeholder="Domisili"
-                  value={editDomisili}
+                  keyboardType="numeric"
+                  placeholder="Harga"
+                  value={editHarga}
                   onChangeText={(e) => {
-                    setEditDomisili(e);
+                    setEditHarga(e);
                   }}
-                />
-                <SelectDropdown
-                  data={Gender}
-                  defaultValue={editJenisKelamin}
-                  buttonStyle={{
-                    width: "100%",
-                    borderColor: "#b0b1b2",
-                    borderWidth: 1,
-                    height: 45,
-                    borderRadius: 5,
-                  }}
-                  buttonTextStyle={{
-                    textAlign: "left",
-                    fontSize: 14,
-                    fontStyle: "normal",
-                  }}
-                  onSelect={(selectedItem) => {
-                    setEditJenisKelamin(selectedItem);
-                  }}
-                  defaultButtonText={"Jenis Kelamin"}
                 />
               </Stack>
               <HStack width={"full"} space={1}>
@@ -298,7 +291,7 @@ const Pelanggan = () => {
                   flex={1}
                   isLoading={loading}
                   isLoadingText="Submitting"
-                  onPress={() => handleEditPelanggan(ID)}
+                  onPress={() => handleEditBarang(ID)}
                 >
                   Save
                 </Button>
@@ -333,7 +326,7 @@ const Pelanggan = () => {
           >
             <VStack space={5} alignItems={"center"}>
               <Text>Konfirmasi Delete</Text>
-              <Text>Apakah kamu yakin ingin delete data pelanggan ini?</Text>
+              <Text>Apakah kamu yakin ingin delete data Barang ini?</Text>
               <HStack width={"full"} space={1}>
                 <Button
                   flex={1}
@@ -348,7 +341,7 @@ const Pelanggan = () => {
                   flex={1}
                   isLoading={loading}
                   isLoadingText="Submitting"
-                  onPress={() => handleDeletePelanggan(ID)}
+                  onPress={() => handleDeleteBarang(ID)}
                 >
                   Delete
                 </Button>
@@ -357,59 +350,50 @@ const Pelanggan = () => {
           </View>
         </View>
       </Modal>
-      {/* create pelanggan */}
+      {/* create Barang */}
       <Box width={"full"} alignItems={"center"}>
         <Stack space={4} w="100%" maxW="300px" mt={10}>
           <Input
             borderColor={"#b0b1b2"}
             size="md"
-            placeholder="Nama Pelanggan"
-            value={namaPelanggan}
+            placeholder="Nama Barang"
+            value={namaBarang}
             onChangeText={(e) => {
-              setNamaPelanggan(e);
+              setNamaBarang(e);
             }}
           />
           <Input
             borderColor={"#b0b1b2"}
             size="md"
-            placeholder="Domisili"
-            value={Domisili}
+            placeholder="Kategori"
+            value={Kategori}
             onChangeText={(e) => {
-              setDomisili(e);
+              setKategori(e);
             }}
           />
-          <SelectDropdown
-            data={Gender}
-            buttonStyle={{
-              width: "100%",
-              borderColor: "#b0b1b2",
-              borderWidth: 1,
-              height: 45,
-              borderRadius: 5,
+          <Input
+            borderColor={"#b0b1b2"}
+            size="md"
+            keyboardType="numeric"
+            placeholder="Harga"
+            value={Harga}
+            onChangeText={(e) => {
+              setHarga(e);
             }}
-            buttonTextStyle={{
-              textAlign: "left",
-              fontSize: 14,
-              fontStyle: "normal",
-            }}
-            onSelect={(selectedItem) => {
-              setJenisKelamin(selectedItem);
-            }}
-            defaultButtonText={"Jenis Kelamin"}
           />
           <Button
             isLoading={loading}
             isLoadingText="Submitting"
-            onPress={() => handleCreatePelanggan()}
+            onPress={() => handleCreateBarang()}
           >
-            Create Pelanggan
+            Create Barang
           </Button>
         </Stack>
       </Box>
 
-      {/* list data pelanggan */}
+      {/* list data Barang */}
       <Text fontWeight={"semibold"} mt={5} fontSize={20}>
-        List Data Pelanggan
+        List Master Barang
       </Text>
       <FlatList
         mt={2}
@@ -418,7 +402,7 @@ const Pelanggan = () => {
         height={"full"}
         contentContainerStyle={{ flexGrow: 1 }}
         disableVirtualization={false}
-        data={dataPelanggan}
+        data={dataBarang}
         renderItem={({ item }: any) => (
           <Box
             borderBottomWidth="1"
@@ -434,11 +418,9 @@ const Pelanggan = () => {
             <VStack>
               <HStack flex={1} alignItems={"center"}>
                 <Box flex={1}>
-                  <Text numberOfLines={1}>Nama Pelanggan: {item.nama}</Text>
-                  <Text numberOfLines={1}>Domisili: {item.domisili}</Text>
-                  <Text numberOfLines={1}>
-                    Jenis Kelamin: {item.jenis_kelamin}
-                  </Text>
+                  <Text numberOfLines={1}>Nama Barang: {item.nama}</Text>
+                  <Text numberOfLines={1}>Kategori: {item.kategori}</Text>
+                  <Text numberOfLines={1}>Harga: {item.harga}</Text>
                 </Box>
                 <VStack space={2} alignItems={"center"}>
                   <Button
@@ -449,10 +431,10 @@ const Pelanggan = () => {
                     rounded={6}
                     onPress={() => {
                       setModalVisible(true),
-                        setID(item.id_pelanggan),
-                        setEditNamaPelanggan(item.nama),
-                        setEditDomisili(item.domisili),
-                        setEditJenisKelamin(item.jenis_kelamin);
+                        setID(item.kode),
+                        setEditNamaBarang(item.nama),
+                        setEditKategori(item.kategori),
+                        setEditHarga(item.harga.toString());
                     }}
                   >
                     Edit
@@ -464,7 +446,7 @@ const Pelanggan = () => {
                     w={12}
                     rounded={6}
                     onPress={() => {
-                      setModalDelete(true), setID(item.id_pelanggan);
+                      setModalDelete(true), setID(item.kode);
                     }}
                   >
                     Delete
@@ -474,10 +456,10 @@ const Pelanggan = () => {
             </VStack>
           </Box>
         )}
-        keyExtractor={(item: any) => item.id_pelanggan}
+        keyExtractor={(item: any) => item.id_Barang}
       />
     </Container>
   );
 };
 
-export default Pelanggan;
+export default Barang;

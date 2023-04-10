@@ -1,20 +1,19 @@
-import { useNavigation } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import React, { FunctionComponent } from "react"
-import Home from "../screen/Home"
-import Pelanggan from "../screen/Pelanggan"
-import { ArrowBackIcon } from "native-base"
+import { useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React, { FunctionComponent } from "react";
+import Home from "../screen/Home";
+import Pelanggan from "../screen/Pelanggan";
+import Barang from "../screen/Barang";
 
 export type StackParamList = {
-  Home: undefined
-  Pelanggan: undefined
-}
+  Home: undefined;
+  Pelanggan: undefined;
+  Barang: undefined;
+};
 
-const Stack = createNativeStackNavigator<StackParamList>()
+const Stack = createNativeStackNavigator<StackParamList>();
 
 const RouteStack: FunctionComponent = () => {
-  const navigation = useNavigation()
-
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -32,10 +31,18 @@ const RouteStack: FunctionComponent = () => {
           headerTitle: "Create Pelanggan",
         }}
       />
+      <Stack.Screen
+        name="Barang"
+        component={Barang}
+        options={{
+          headerTitleAlign: "center",
+          headerTitle: "Create Master Barang",
+        }}
+      />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 //TODO: implement Auth flow (private & public page)
 
-export default RouteStack
+export default RouteStack;

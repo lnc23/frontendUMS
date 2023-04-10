@@ -1,17 +1,17 @@
-import { useNavigation } from "@react-navigation/native"
-import { Box, Center, Button, VStack } from "native-base"
-import { StackParamList } from "../../routes/RouteStack"
-import { StackNavigationProp } from "@react-navigation/stack"
+import { useNavigation } from "@react-navigation/native";
+import { Box, Center, Button, VStack } from "native-base";
+import { StackParamList } from "../../routes/RouteStack";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const Home = () => {
-  const navigation = useNavigation<StackNavigationProp<StackParamList>>()
+  const navigation = useNavigation<StackNavigationProp<StackParamList>>();
 
   return (
     <Box flex={1} alignItems={"center"} justifyContent={"center"}>
       <VStack space={5}>
         <Button
           onPress={() => {
-            navigation.push("Pelanggan")
+            navigation.push("Pelanggan");
           }}
           alignContent={"center"}
           bg={"blueGray.400"}
@@ -20,7 +20,14 @@ const Home = () => {
         >
           Create Master Pelanggan
         </Button>
-        <Button bg={"blueGray.400"} borderRadius={5} fontWeight={"semibold"}>
+        <Button
+          onPress={() => {
+            navigation.push("Barang");
+          }}
+          bg={"blueGray.400"}
+          borderRadius={5}
+          fontWeight={"semibold"}
+        >
           Create Master Barang
         </Button>
         <Button bg={"blueGray.400"} borderRadius={5} fontWeight={"semibold"}>
@@ -28,7 +35,7 @@ const Home = () => {
         </Button>
       </VStack>
     </Box>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

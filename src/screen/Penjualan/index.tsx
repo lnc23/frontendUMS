@@ -9,9 +9,7 @@ import {
   HStack,
   Container,
   View,
-  Pressable,
   ScrollView,
-  List,
 } from "native-base"
 import { Modal, Platform, TextInput } from "react-native"
 import React, { useEffect, useRef, useState } from "react"
@@ -28,6 +26,7 @@ const Penjualan = () => {
   const [editPelanggan, setEditPelanggan] = React.useState<{
     id_pelanggan: number
   }>()
+  const [editIdItem, setEditIdItem] = React.useState<any>([])
   const [editBarang, setEditBarang] = React.useState<any>([])
   const [editQuantity, setEditQuantity] = React.useState<any>([])
   const [detailPenjualan, setDetailPenjualan] = React.useState<Array<any>>()
@@ -49,9 +48,6 @@ const Penjualan = () => {
   const [databarangDropdown, setDatabarangDropdown] = React.useState<any>([])
   const [Tanggal, setTanggal] = React.useState(new Date())
   const toast = useToast()
-  const [editnamabarangDropdown, setEditNamabarangDropdown] = React.useState("")
-  const [editKategori, setEditKategori] = React.useState("")
-  const [editHarga, setEditHarga] = React.useState("")
   const [dataPelanggan, setDataPelanggan] = React.useState<Array<any>>([])
   const [size, setSize] = React.useState(1)
   const [Barang, setBarang] = React.useState<any>([])
@@ -131,10 +127,10 @@ const Penjualan = () => {
           navigation.replace("Penjualan")
           setPelanggan({ id_pelanggan: 0, nama: "" })
           setBarang([])
-          const fetchData = axios
+          axios
             .get(`${API_URL}/api/penjualan`)
             .then(function (response) {
-              setDatabarangDropdown(response.data)
+              setDataPenjualan(response.data)
             })
             .catch(function (e) {
               console.log(e)
@@ -168,7 +164,6 @@ const Penjualan = () => {
 
   const handleEditPenjualan = () => {
     setLoading(true)
-
     if (!Tanggal || !editPelanggan || editBarang.length === 0) {
       toast.show({
         render: () => {
@@ -182,6 +177,7 @@ const Penjualan = () => {
       setLoading(false)
     } else {
       const combinedData = editBarang.map((item: any, index: any) => ({
+        id_item: Number(editIdItem[index]),
         kode_barang: Number(item),
         qty: Number(editQuantity[index]),
       }))
@@ -192,20 +188,15 @@ const Penjualan = () => {
         subtotal: editSubtotal(),
         items: combinedData,
       }
+
+      console.log(obj)
       axios
         .put(
           `${API_URL}/api/penjualan?id_nota=${editDataPenjualan.id_nota}`,
           obj
         )
         .then(function (response) {
-          const fetchData = axios
-            .get(`${API_URL}/api/penjualan`)
-            .then(function (response) {
-              setDatabarangDropdown(response.data)
-            })
-            .catch(function (e) {
-              console.log(e)
-            })
+          navigation.replace("Penjualan")
           setLoading(false)
           toast.show({
             render: () => {
@@ -238,12 +229,12 @@ const Penjualan = () => {
   const handleDeletebarangDropdown = (id: any) => {
     setLoading(true)
     axios
-      .delete(`${API_URL}/api/barangDropdown?kode=${id}`)
+      .delete(`${API_URL}/api/penjualan?id_nota=${id}`)
       .then(function (response) {
         const fetchData = axios
-          .get(`${API_URL}/api/barangDropdown`)
+          .get(`${API_URL}/api/penjualan`)
           .then(function (response) {
-            setDatabarangDropdown(response.data)
+            setDataPenjualan(response.data)
           })
           .catch(function (e) {
             console.log(e)
@@ -253,7 +244,7 @@ const Penjualan = () => {
           render: () => {
             return (
               <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
-                <Text color={"white"}>barangDropdown Berhasil Didelete</Text>
+                <Text color={"white"}>Penjualan Berhasil Didelete</Text>
               </Box>
             )
           },
@@ -491,7 +482,7 @@ const Penjualan = () => {
                     <SelectDropdown
                       ref={dropdownRef}
                       data={dataPelanggan}
-                      defaultValueByIndex={editPelanggan?.id_pelanggan}
+                      defaultValue={editPelanggan?.id_pelanggan}
                       buttonStyle={{
                         width: "100%",
                         borderColor: "#b0b1b2",
@@ -523,7 +514,11 @@ const Penjualan = () => {
                             <Text>
                               {selectedItem
                                 ? selectedItem.nama
-                                : "Pilih Pelanggan"}
+                                : dataPelanggan?.find(
+                                    (item: any) =>
+                                      Number(item.id_pelanggan) ===
+                                      Number(editPelanggan?.id_pelanggan)
+                                  )?.nama}
                             </Text>
                           </View>
                         )
@@ -551,7 +546,7 @@ const Penjualan = () => {
                         <Stack key={i} space={4} w="100%" maxW="300px">
                           <Text>Barang ke {i + 1}</Text>
                           <SelectDropdown
-                            defaultValueByIndex={item.kode_barang}
+                            defaultValue={editBarang[i]}
                             ref={dropdownRef}
                             data={databarangDropdown}
                             buttonStyle={{
@@ -583,7 +578,11 @@ const Penjualan = () => {
                                   <Text>
                                     {selectedItem
                                       ? selectedItem.nama
-                                      : "Pilih Barang"}
+                                      : databarangDropdown?.find(
+                                          (item: any) =>
+                                            Number(item.kode) ===
+                                            Number(editBarang[i])
+                                        )?.nama}
                                   </Text>
                                 </View>
                               )
@@ -776,7 +775,6 @@ const Penjualan = () => {
             <SelectDropdown
               ref={dropdownRef}
               data={dataPelanggan}
-              defaultValue={Pelanggan?.nama}
               buttonStyle={{
                 width: "100%",
                 borderColor: "#b0b1b2",
@@ -922,11 +920,14 @@ const Penjualan = () => {
                               })
                             const tempArrBarang = [...editBarang]
                             const tempArrQuantity = [...editQuantity]
+                            const tempArrIdItem = [...editIdItem]
                             item.item_penjualan.map((data: any, index: any) => {
                               tempArrBarang[index] = data?.kode_barang
                               tempArrQuantity[index] = data?.qty
+                              tempArrIdItem[index] = data.id_item
                               setEditBarang(tempArrBarang)
                               setEditQuantity(tempArrQuantity)
+                              setEditIdItem(tempArrIdItem)
                             })
                           }}
                         >
@@ -939,7 +940,7 @@ const Penjualan = () => {
                           w={12}
                           rounded={6}
                           onPress={() => {
-                            setModalDelete(true), setID(item.kode)
+                            setModalDelete(true), setID(item.id_nota)
                           }}
                         >
                           Delete

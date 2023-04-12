@@ -12,7 +12,7 @@ import {
   View,
 } from "native-base"
 import { Modal } from "react-native"
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import axios from "axios"
 //@ts-ignore
 import { API_URL } from "@env"
@@ -32,7 +32,7 @@ const Barang = () => {
   const [Kategori, setKategori] = React.useState("")
   const [Harga, setHarga] = React.useState("")
   const toast = useToast()
-  const Gender = ["Laki-laki", "Perempuan"]
+  const inputRef = useRef<any>(null)
   const [editnamaBarang, setEditNamaBarang] = React.useState("")
   const [editKategori, setEditKategori] = React.useState("")
   const [editHarga, setEditHarga] = React.useState("")
@@ -60,6 +60,10 @@ const Barang = () => {
       axios
         .post(`${API_URL}/api/barang`, obj)
         .then(function (response) {
+          inputRef.current.clear()
+          setHarga("")
+          setKategori("")
+          setNamaBarang("")
           const fetchData = axios
             .get(`${API_URL}/api/barang`)
             .then(function (response) {
@@ -353,6 +357,7 @@ const Barang = () => {
       <Box width={"full"} alignItems={"center"}>
         <Stack space={4} w="100%" maxW="300px" mt={10}>
           <Input
+            ref={inputRef}
             borderColor={"#b0b1b2"}
             size="md"
             placeholder="Nama Barang"
@@ -362,6 +367,7 @@ const Barang = () => {
             }}
           />
           <Input
+            ref={inputRef}
             borderColor={"#b0b1b2"}
             size="md"
             placeholder="Kategori"
@@ -371,6 +377,7 @@ const Barang = () => {
             }}
           />
           <Input
+            ref={inputRef}
             borderColor={"#b0b1b2"}
             size="md"
             keyboardType="numeric"

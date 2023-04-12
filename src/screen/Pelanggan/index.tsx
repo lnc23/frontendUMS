@@ -10,41 +10,42 @@ import {
   HStack,
   Container,
   View,
-} from "native-base";
-import { Modal } from "react-native";
-import React, { useEffect } from "react";
-import SelectDropdown from "react-native-select-dropdown";
-import axios from "axios";
+} from "native-base"
+import { Modal } from "react-native"
+import React, { useEffect, useRef } from "react"
+import SelectDropdown from "react-native-select-dropdown"
+import axios from "axios"
 //@ts-ignore
-import { API_URL } from "@env";
+import { API_URL } from "@env"
 
 const Pelanggan = () => {
-  const [loading, setLoading] = React.useState(false);
-  const [modalDelete, setModalDelete] = React.useState(false);
+  const [loading, setLoading] = React.useState(false)
+  const [modalDelete, setModalDelete] = React.useState(false)
   const [ID, setID] = React.useState<{
-    id_pelanggan: number;
-    nama: string;
-    domisili: string;
-    jenis_kelamin: string;
-  }>();
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [dataPelanggan, setDataPelanggan] = React.useState();
-  const [namaPelanggan, setNamaPelanggan] = React.useState("");
-  const [Domisili, setDomisili] = React.useState("");
-  const [jenisKelamin, setJenisKelamin] = React.useState("");
-  const toast = useToast();
-  const Gender = ["Laki-laki", "Perempuan"];
-  const [editNamaPelanggan, setEditNamaPelanggan] = React.useState("");
-  const [editDomisili, setEditDomisili] = React.useState("");
-  const [editJenisKelamin, setEditJenisKelamin] = React.useState("");
+    id_pelanggan: number
+    nama: string
+    domisili: string
+    jenis_kelamin: string
+  }>()
+  const [modalVisible, setModalVisible] = React.useState(false)
+  const [dataPelanggan, setDataPelanggan] = React.useState()
+  const [namaPelanggan, setNamaPelanggan] = React.useState("")
+  const [Domisili, setDomisili] = React.useState("")
+  const [jenisKelamin, setJenisKelamin] = React.useState("")
+  const toast = useToast()
+  const Gender = ["Laki-laki", "Perempuan"]
+  const [editNamaPelanggan, setEditNamaPelanggan] = React.useState("")
+  const [editDomisili, setEditDomisili] = React.useState("")
+  const [editJenisKelamin, setEditJenisKelamin] = React.useState("")
+  const dropdownRef = useRef<any>({})
 
   const handleCreatePelanggan = () => {
-    setLoading(true);
+    setLoading(true)
     const obj = {
       nama: namaPelanggan,
       domisili: Domisili,
       jenis_kelamin: jenisKelamin,
-    };
+    }
     if (!jenisKelamin || !namaPelanggan || !Domisili) {
       toast.show({
         render: () => {
@@ -52,56 +53,60 @@ const Pelanggan = () => {
             <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
               <Text color={"white"}>Data yang diinput belum lengkap!</Text>
             </Box>
-          );
+          )
         },
-      });
-      setLoading(false);
+      })
+      setLoading(false)
     } else {
       axios
         .post(`${API_URL}/api/pelanggan`, obj)
         .then(function (response) {
+          dropdownRef.current.reset()
+          setDomisili("")
+          setJenisKelamin("")
+          setNamaPelanggan("")
           const fetchData = axios
             .get(`${API_URL}/api/pelanggan`)
             .then(function (response) {
-              setDataPelanggan(response.data.data);
+              setDataPelanggan(response.data.data)
             })
             .catch(function (e) {
-              console.log(e);
-            });
-          setLoading(false);
+              console.log(e)
+            })
+          setLoading(false)
           toast.show({
             render: () => {
               return (
                 <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
                   <Text color={"white"}>Data Pelanggan Berhasil Dicreate</Text>
                 </Box>
-              );
+              )
             },
-          });
+          })
         })
         .catch(function (error) {
-          console.log(error);
-          setLoading(false);
+          console.log(error)
+          setLoading(false)
           toast.show({
             render: () => {
               return (
                 <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
                   <Text color={"white"}>Data Gagal Dicreate</Text>
                 </Box>
-              );
+              )
             },
-          });
-        });
+          })
+        })
     }
-  };
+  }
 
   const handleEditPelanggan = (id: any) => {
-    setLoading(true);
+    setLoading(true)
     const obj = {
       nama: editNamaPelanggan,
       domisili: editDomisili,
       jenis_kelamin: editJenisKelamin,
-    };
+    }
     if (!editJenisKelamin || !editNamaPelanggan || !editDomisili) {
       toast.show({
         render: () => {
@@ -109,10 +114,10 @@ const Pelanggan = () => {
             <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
               <Text color={"white"}>Data yang diinput belum lengkap!</Text>
             </Box>
-          );
+          )
         },
-      });
-      setLoading(false);
+      })
+      setLoading(false)
     } else {
       axios
         .put(`${API_URL}/api/pelanggan?id_pelanggan=${id}`, obj)
@@ -120,68 +125,68 @@ const Pelanggan = () => {
           const fetchData = axios
             .get(`${API_URL}/api/pelanggan`)
             .then(function (response) {
-              setDataPelanggan(response.data.data);
+              setDataPelanggan(response.data.data)
             })
             .catch(function (e) {
-              console.log(e);
-            });
-          setLoading(false);
+              console.log(e)
+            })
+          setLoading(false)
           toast.show({
             render: () => {
               return (
                 <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
                   <Text color={"white"}>Data Pelanggan Berhasil Diedit</Text>
                 </Box>
-              );
+              )
             },
-          });
-          setModalVisible(false);
+          })
+          setModalVisible(false)
         })
         .catch(function (error) {
-          console.log(error);
-          setLoading(false);
+          console.log(error)
+          setLoading(false)
           toast.show({
             render: () => {
               return (
                 <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
                   <Text color={"white"}>Data Gagal Diedit</Text>
                 </Box>
-              );
+              )
             },
-          });
-          setModalVisible(false);
-        });
+          })
+          setModalVisible(false)
+        })
     }
-  };
+  }
 
   const handleDeletePelanggan = (id: any) => {
-    setLoading(true);
+    setLoading(true)
     axios
       .delete(`${API_URL}/api/pelanggan?id_pelanggan=${id}`)
       .then(function (response) {
         const fetchData = axios
           .get(`${API_URL}/api/pelanggan`)
           .then(function (response) {
-            setDataPelanggan(response.data.data);
+            setDataPelanggan(response.data.data)
           })
           .catch(function (e) {
-            console.log(e);
-          });
-        setLoading(false);
+            console.log(e)
+          })
+        setLoading(false)
         toast.show({
           render: () => {
             return (
               <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
                 <Text color={"white"}>Data Berhasil Didelete</Text>
               </Box>
-            );
+            )
           },
-        });
-        setModalDelete(false);
+        })
+        setModalDelete(false)
       })
       .catch(function (error) {
-        console.log(error);
-        setLoading(false);
+        console.log(error)
+        setLoading(false)
         toast.show({
           render: () => {
             return (
@@ -190,23 +195,23 @@ const Pelanggan = () => {
                   Data gagal didelete karena memiliki no nota
                 </Text>
               </Box>
-            );
+            )
           },
-        });
-        setModalVisible(false);
-      });
-  };
+        })
+        setModalVisible(false)
+      })
+  }
 
   useEffect(() => {
     axios
       .get(`${API_URL}/api/pelanggan`)
       .then(function (response) {
-        setDataPelanggan(response.data.data);
+        setDataPelanggan(response.data.data)
       })
       .catch(function (error) {
-        console.log(error);
-      });
-  }, [!loading]);
+        console.log(error)
+      })
+  }, [!loading])
 
   return (
     <Container
@@ -224,7 +229,7 @@ const Pelanggan = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(false);
+          setModalVisible(false)
         }}
       >
         <View
@@ -251,7 +256,7 @@ const Pelanggan = () => {
                   placeholder="Nama Pelanggan"
                   value={editNamaPelanggan}
                   onChangeText={(e) => {
-                    setEditNamaPelanggan(e);
+                    setEditNamaPelanggan(e)
                   }}
                 />
                 <Input
@@ -260,10 +265,11 @@ const Pelanggan = () => {
                   placeholder="Domisili"
                   value={editDomisili}
                   onChangeText={(e) => {
-                    setEditDomisili(e);
+                    setEditDomisili(e)
                   }}
                 />
                 <SelectDropdown
+                  ref={dropdownRef}
                   data={Gender}
                   defaultValue={editJenisKelamin}
                   buttonStyle={{
@@ -279,7 +285,7 @@ const Pelanggan = () => {
                     fontStyle: "normal",
                   }}
                   onSelect={(selectedItem) => {
-                    setEditJenisKelamin(selectedItem);
+                    setEditJenisKelamin(selectedItem)
                   }}
                   defaultButtonText={"Jenis Kelamin"}
                 />
@@ -313,7 +319,7 @@ const Pelanggan = () => {
         transparent={true}
         visible={modalDelete}
         onRequestClose={() => {
-          setModalDelete(false);
+          setModalDelete(false)
         }}
       >
         <View
@@ -366,7 +372,7 @@ const Pelanggan = () => {
             placeholder="Nama Pelanggan"
             value={namaPelanggan}
             onChangeText={(e) => {
-              setNamaPelanggan(e);
+              setNamaPelanggan(e)
             }}
           />
           <Input
@@ -375,7 +381,7 @@ const Pelanggan = () => {
             placeholder="Domisili"
             value={Domisili}
             onChangeText={(e) => {
-              setDomisili(e);
+              setDomisili(e)
             }}
           />
           <SelectDropdown
@@ -393,7 +399,7 @@ const Pelanggan = () => {
               fontStyle: "normal",
             }}
             onSelect={(selectedItem) => {
-              setJenisKelamin(selectedItem);
+              setJenisKelamin(selectedItem)
             }}
             defaultButtonText={"Jenis Kelamin"}
           />
@@ -452,7 +458,7 @@ const Pelanggan = () => {
                         setID(item.id_pelanggan),
                         setEditNamaPelanggan(item.nama),
                         setEditDomisili(item.domisili),
-                        setEditJenisKelamin(item.jenis_kelamin);
+                        setEditJenisKelamin(item.jenis_kelamin)
                     }}
                   >
                     Edit
@@ -464,7 +470,7 @@ const Pelanggan = () => {
                     w={12}
                     rounded={6}
                     onPress={() => {
-                      setModalDelete(true), setID(item.id_pelanggan);
+                      setModalDelete(true), setID(item.id_pelanggan)
                     }}
                   >
                     Delete
@@ -477,7 +483,7 @@ const Pelanggan = () => {
         keyExtractor={(item: any) => item.id_pelanggan}
       />
     </Container>
-  );
-};
+  )
+}
 
-export default Pelanggan;
+export default Pelanggan

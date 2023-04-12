@@ -745,16 +745,7 @@ const Penjualan = () => {
                     colorScheme={"secondary"}
                     onPress={() => setModalDetail(false)}
                   >
-                    Cancel
-                  </Button>
-
-                  <Button
-                    flex={1}
-                    isLoading={loading}
-                    isLoadingText="Submitting"
-                    onPress={() => handleDeletebarangDropdown(ID)}
-                  >
-                    Delete
+                    Close
                   </Button>
                 </HStack>
               </VStack>

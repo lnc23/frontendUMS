@@ -10,42 +10,41 @@ import {
   HStack,
   Container,
   View,
-} from "native-base";
-import { Modal } from "react-native";
-import React, { useEffect } from "react";
-import SelectDropdown from "react-native-select-dropdown";
-import axios from "axios";
+} from "native-base"
+import { Modal } from "react-native"
+import React, { useEffect } from "react"
+import axios from "axios"
 //@ts-ignore
-import { API_URL } from "@env";
+import { API_URL } from "@env"
 
 const Barang = () => {
-  const [loading, setLoading] = React.useState(false);
-  const [modalDelete, setModalDelete] = React.useState(false);
+  const [loading, setLoading] = React.useState(false)
+  const [modalDelete, setModalDelete] = React.useState(false)
   const [ID, setID] = React.useState<{
-    kode: number;
-    nama: string;
-    kategori: string;
-    harga: number;
-  }>();
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [dataBarang, setDataBarang] = React.useState();
-  const [namaBarang, setNamaBarang] = React.useState("");
-  const [Kategori, setKategori] = React.useState("");
-  const [Harga, setHarga] = React.useState("");
-  const toast = useToast();
-  const Gender = ["Laki-laki", "Perempuan"];
-  const [editnamaBarang, setEditNamaBarang] = React.useState("");
-  const [editKategori, setEditKategori] = React.useState("");
-  const [editHarga, setEditHarga] = React.useState("");
+    kode: number
+    nama: string
+    kategori: string
+    harga: number
+  }>()
+  const [modalVisible, setModalVisible] = React.useState(false)
+  const [dataBarang, setDataBarang] = React.useState()
+  const [namaBarang, setNamaBarang] = React.useState("")
+  const [Kategori, setKategori] = React.useState("")
+  const [Harga, setHarga] = React.useState("")
+  const toast = useToast()
+  const Gender = ["Laki-laki", "Perempuan"]
+  const [editnamaBarang, setEditNamaBarang] = React.useState("")
+  const [editKategori, setEditKategori] = React.useState("")
+  const [editHarga, setEditHarga] = React.useState("")
 
   const handleCreateBarang = () => {
-    setLoading(true);
+    setLoading(true)
     const obj = {
       nama: namaBarang,
       kategori: Kategori,
       harga: Number(Harga),
-    };
-    console.log(obj);
+    }
+    console.log(obj)
     if (!Harga || !namaBarang || !Kategori) {
       toast.show({
         render: () => {
@@ -53,10 +52,10 @@ const Barang = () => {
             <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
               <Text color={"white"}>Data yang diinput belum lengkap!</Text>
             </Box>
-          );
+          )
         },
-      });
-      setLoading(false);
+      })
+      setLoading(false)
     } else {
       axios
         .post(`${API_URL}/api/barang`, obj)
@@ -64,45 +63,45 @@ const Barang = () => {
           const fetchData = axios
             .get(`${API_URL}/api/barang`)
             .then(function (response) {
-              setDataBarang(response.data);
+              setDataBarang(response.data)
             })
             .catch(function (e) {
-              console.log(e);
-            });
-          setLoading(false);
+              console.log(e)
+            })
+          setLoading(false)
           toast.show({
             render: () => {
               return (
                 <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
                   <Text color={"white"}>Data Barang Berhasil Dicreate</Text>
                 </Box>
-              );
+              )
             },
-          });
+          })
         })
         .catch(function (error) {
-          console.log(error);
-          setLoading(false);
+          console.log(error)
+          setLoading(false)
           toast.show({
             render: () => {
               return (
                 <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
                   <Text color={"white"}>Data Gagal Dicreate</Text>
                 </Box>
-              );
+              )
             },
-          });
-        });
+          })
+        })
     }
-  };
+  }
 
   const handleEditBarang = (id: any) => {
-    setLoading(true);
+    setLoading(true)
     const obj = {
       nama: editnamaBarang,
       kategori: editKategori,
       harga: Number(editHarga),
-    };
+    }
     if (!editHarga || !editnamaBarang || !editKategori) {
       toast.show({
         render: () => {
@@ -110,10 +109,10 @@ const Barang = () => {
             <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
               <Text color={"white"}>Data yang diinput belum lengkap!</Text>
             </Box>
-          );
+          )
         },
-      });
-      setLoading(false);
+      })
+      setLoading(false)
     } else {
       axios
         .put(`${API_URL}/api/barang?kode=${id}`, obj)
@@ -121,68 +120,68 @@ const Barang = () => {
           const fetchData = axios
             .get(`${API_URL}/api/barang`)
             .then(function (response) {
-              setDataBarang(response.data);
+              setDataBarang(response.data)
             })
             .catch(function (e) {
-              console.log(e);
-            });
-          setLoading(false);
+              console.log(e)
+            })
+          setLoading(false)
           toast.show({
             render: () => {
               return (
                 <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
                   <Text color={"white"}>Data Barang Berhasil Diedit</Text>
                 </Box>
-              );
+              )
             },
-          });
-          setModalVisible(false);
+          })
+          setModalVisible(false)
         })
         .catch(function (error) {
-          console.log(error);
-          setLoading(false);
+          console.log(error)
+          setLoading(false)
           toast.show({
             render: () => {
               return (
                 <Box bg="red.600" px="2" py="1" rounded="sm" mb={5}>
                   <Text color={"white"}>Data Gagal Diedit</Text>
                 </Box>
-              );
+              )
             },
-          });
-          setModalVisible(false);
-        });
+          })
+          setModalVisible(false)
+        })
     }
-  };
+  }
 
   const handleDeleteBarang = (id: any) => {
-    setLoading(true);
+    setLoading(true)
     axios
       .delete(`${API_URL}/api/barang?kode=${id}`)
       .then(function (response) {
         const fetchData = axios
           .get(`${API_URL}/api/barang`)
           .then(function (response) {
-            setDataBarang(response.data);
+            setDataBarang(response.data)
           })
           .catch(function (e) {
-            console.log(e);
-          });
-        setLoading(false);
+            console.log(e)
+          })
+        setLoading(false)
         toast.show({
           render: () => {
             return (
               <Box bg="green.600" px="2" py="1" rounded="sm" mb={5}>
                 <Text color={"white"}>Barang Berhasil Didelete</Text>
               </Box>
-            );
+            )
           },
-        });
-        setModalDelete(false);
+        })
+        setModalDelete(false)
       })
       .catch(function (error) {
-        console.log(error);
-        setLoading(false);
+        console.log(error)
+        setLoading(false)
         toast.show({
           render: () => {
             return (
@@ -191,23 +190,23 @@ const Barang = () => {
                   Barang gagal didelete karena sudah terdaftar no nota
                 </Text>
               </Box>
-            );
+            )
           },
-        });
-        setModalVisible(false);
-      });
-  };
+        })
+        setModalVisible(false)
+      })
+  }
 
   useEffect(() => {
     axios
       .get(`${API_URL}/api/barang`)
       .then(function (response) {
-        setDataBarang(response.data);
+        setDataBarang(response.data)
       })
       .catch(function (error) {
-        console.log(error);
-      });
-  }, [!loading]);
+        console.log(error)
+      })
+  }, [!loading])
 
   return (
     <Container
@@ -225,7 +224,7 @@ const Barang = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          setModalVisible(false);
+          setModalVisible(false)
         }}
       >
         <View
@@ -253,7 +252,7 @@ const Barang = () => {
                   placeholder="Nama Barang"
                   value={editnamaBarang}
                   onChangeText={(e) => {
-                    setEditNamaBarang(e);
+                    setEditNamaBarang(e)
                   }}
                 />
                 <Input
@@ -263,7 +262,7 @@ const Barang = () => {
                   placeholder="Kategori"
                   value={editKategori}
                   onChangeText={(e) => {
-                    setEditKategori(e);
+                    setEditKategori(e)
                   }}
                 />
                 <Input
@@ -273,7 +272,7 @@ const Barang = () => {
                   placeholder="Harga"
                   value={editHarga}
                   onChangeText={(e) => {
-                    setEditHarga(e);
+                    setEditHarga(e)
                   }}
                 />
               </Stack>
@@ -306,7 +305,7 @@ const Barang = () => {
         transparent={true}
         visible={modalDelete}
         onRequestClose={() => {
-          setModalDelete(false);
+          setModalDelete(false)
         }}
       >
         <View
@@ -359,7 +358,7 @@ const Barang = () => {
             placeholder="Nama Barang"
             value={namaBarang}
             onChangeText={(e) => {
-              setNamaBarang(e);
+              setNamaBarang(e)
             }}
           />
           <Input
@@ -368,7 +367,7 @@ const Barang = () => {
             placeholder="Kategori"
             value={Kategori}
             onChangeText={(e) => {
-              setKategori(e);
+              setKategori(e)
             }}
           />
           <Input
@@ -378,7 +377,7 @@ const Barang = () => {
             placeholder="Harga"
             value={Harga}
             onChangeText={(e) => {
-              setHarga(e);
+              setHarga(e)
             }}
           />
           <Button
@@ -434,7 +433,7 @@ const Barang = () => {
                         setID(item.kode),
                         setEditNamaBarang(item.nama),
                         setEditKategori(item.kategori),
-                        setEditHarga(item.harga.toString());
+                        setEditHarga(item.harga.toString())
                     }}
                   >
                     Edit
@@ -446,7 +445,7 @@ const Barang = () => {
                     w={12}
                     rounded={6}
                     onPress={() => {
-                      setModalDelete(true), setID(item.kode);
+                      setModalDelete(true), setID(item.kode)
                     }}
                   >
                     Delete
@@ -459,7 +458,7 @@ const Barang = () => {
         keyExtractor={(item: any) => item.kode}
       />
     </Container>
-  );
-};
+  )
+}
 
-export default Barang;
+export default Barang

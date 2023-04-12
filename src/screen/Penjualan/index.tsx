@@ -723,7 +723,7 @@ const Penjualan = () => {
               <VStack space={5}>
                 <Text alignSelf={"center"}>Detail Penjualan</Text>
                 {detailPenjualan?.map((item: any, index) => (
-                  <>
+                  <Box key={index}>
                     <Text>Barang Ke {index + 1}</Text>
                     <Text>
                       Nama Barang:{" "}
@@ -735,7 +735,7 @@ const Penjualan = () => {
                       }
                     </Text>
                     <Text>Quantity: {item.qty}</Text>
-                  </>
+                  </Box>
                 ))}
 
                 <HStack width={"full"} space={1}>

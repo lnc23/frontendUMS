@@ -100,6 +100,8 @@ const Pelanggan = () => {
     }
   }
 
+  console.log(dataPelanggan)
+
   const handleEditPelanggan = (id: any) => {
     setLoading(true)
     const obj = {

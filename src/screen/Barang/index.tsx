@@ -36,16 +36,20 @@ const Barang = () => {
   const [editnamaBarang, setEditNamaBarang] = React.useState("")
   const [editKategori, setEditKategori] = React.useState("")
   const [editHarga, setEditHarga] = React.useState("")
+  const [warna, setwarna] = React.useState("")
+  const [editWarna, setEditWarna] = React.useState("")
+
 
   const handleCreateBarang = () => {
     setLoading(true)
     const obj = {
       nama: namaBarang,
       kategori: Kategori,
+      warna: warna,
       harga: Number(Harga),
     }
     console.log(obj)
-    if (!Harga || !namaBarang || !Kategori) {
+    if (!Harga || !namaBarang || !Kategori || !warna) {
       toast.show({
         render: () => {
           return (
@@ -99,11 +103,14 @@ const Barang = () => {
     }
   }
 
+  console.log(dataBarang)
+
   const handleEditBarang = (id: any) => {
     setLoading(true)
     const obj = {
       nama: editnamaBarang,
       kategori: editKategori,
+      warna: editWarna,
       harga: Number(editHarga),
     }
     if (!editHarga || !editnamaBarang || !editKategori) {
@@ -270,6 +277,16 @@ const Barang = () => {
                   }}
                 />
                 <Input
+                  width={"100%"}
+                  borderColor={"#b0b1b2"}
+                  size="md"
+                  placeholder="Warna"
+                  value={editWarna}
+                  onChangeText={(e) => {
+                    setEditWarna(e)
+                  }}
+                />
+                <Input
                   borderColor={"#b0b1b2"}
                   size="md"
                   keyboardType="numeric"
@@ -380,6 +397,16 @@ const Barang = () => {
             ref={inputRef}
             borderColor={"#b0b1b2"}
             size="md"
+            placeholder="Warna"
+            value={warna}
+            onChangeText={(e) => {
+              setwarna(e)
+            }}
+          />
+          <Input
+            ref={inputRef}
+            borderColor={"#b0b1b2"}
+            size="md"
             keyboardType="numeric"
             placeholder="Harga"
             value={Harga}
@@ -426,6 +453,7 @@ const Barang = () => {
                 <Box flex={1}>
                   <Text numberOfLines={1}>Nama Barang: {item.nama}</Text>
                   <Text numberOfLines={1}>Kategori: {item.kategori}</Text>
+                  <Text numberOfLines={1}>Warna: {item.warna}</Text>
                   <Text numberOfLines={1}>Harga: {item.harga}</Text>
                 </Box>
                 <VStack space={2} alignItems={"center"}>
@@ -441,6 +469,7 @@ const Barang = () => {
                         setEditNamaBarang(item.nama),
                         setEditKategori(item.kategori),
                         setEditHarga(item.harga.toString())
+                        setEditWarna(item.warna)
                     }}
                   >
                     Edit

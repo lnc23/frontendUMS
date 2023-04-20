@@ -162,6 +162,8 @@ const Penjualan = () => {
     }
   }
 
+  console.log(dataPenjualan)
+
   const handleEditPenjualan = () => {
     setLoading(true)
     if (!Tanggal || !editPelanggan || editBarang.length === 0) {
@@ -379,7 +381,7 @@ const Penjualan = () => {
                     paddingHorizontal: 18,
                   }}
                 >
-                  <Text>{item.nama}</Text>
+                  <Text>{item.nama} - {item.warna}</Text>
                 </View>
               )
             }}
